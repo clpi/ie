@@ -1,6 +1,6 @@
 import terminal
 
-const styleBold* = {styleBlink, styleBright}
+const styleBold* = {styleBright}
 
 proc er*(inp: string) =
   write stdout,inp
@@ -46,3 +46,9 @@ proc eRe*(inp: string) =
 proc ed*(inp: string) =
   writeStyled inp, {styleDim}
 
+# just me being selly
+proc `<b`*(m: string): void = 
+  styledWrite stdout, m
+
+proc `<e`*(m: string): void = 
+  styledEcho resetStyle, m

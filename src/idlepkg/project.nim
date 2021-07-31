@@ -1,6 +1,6 @@
 import os, strutils
 
-proc new*(name: string) =
+proc newWorkspace*(name: string) =
   let pdir = joinPath(getCurrentDir(), name)
   try:
     createDir pdir
@@ -8,7 +8,7 @@ proc new*(name: string) =
   except OSError:
     echo "Failed to create dir"
 
-proc build*(path: string) =
+proc runBuild*(path: string) =
   let inp = readFile path
 
 

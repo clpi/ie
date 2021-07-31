@@ -1,4 +1,4 @@
-import re, os, strformat, strutils, tables
+import re, os, strformat, strutils, tables, options
 
 type 
   Conf* = ref object
@@ -14,18 +14,29 @@ type
     history: string
     indent: bool
 
-proc init*(): Conf = 
-  default Conf
+proc configDir*(): string = 
+  joinPath getConfigDir(), "idle"
 
-proc configPath*(): string = 
-  let configFile = getConfigDir().joinPath "idle"
-  createDir configFile
-  configFile
+proc configDefault*(): string = 
+  let gen = "history false\ndebug false\n"
+  let user = "[user]\ndisplay\nname\n"
+  let server = "[server]\nport 2738"
+  &"{gen}{user}{server}"
 
-proc createFile*(path: string): Conf =
-  default Conf
+proc configFile*(): string = 
+  discard existsOrCreateDir configDir()
+  joinpath configDir(), "config.toml"
 
-proc loadConfig*(path: string): Conf = 
-  let confStr = readAll open configPath()
-  echo confstr
-  default Conf
+proc configFromFile*(): Option[Conf] =
+  if existsFile configFile():
+    return some(default Conf)
+  writeFile configFile(), configDefault()
+  return some(default Conf)
+
+
+proc initConfig*(): Conf = 
+  var config = configFromFile()
+  if isSome config:
+    return get config
+  else: 
+    default Conf
