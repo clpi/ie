@@ -1,8 +1,7 @@
 import re, os, strformat, strutils, tables
 
 type 
-  Config = ref object
-    dict: OrderedTable[string, seq[string]]
+  Conf* = ref object
     repl: ReplConfig
     conpiler: CompilerConfig
 
@@ -15,15 +14,18 @@ type
     history: string
     indent: bool
 
-proc init(): Config = 
-  Config.default
+proc init*(): Conf = 
+  default Conf
 
-proc configPath(): string = 
-  let idle = getConfigDir().joinPath("idle")
-  idle.createDir()
+proc configPath*(): string = 
+  let configFile = getConfigDir().joinPath "idle"
+  createDir configFile
+  configFile
 
-proc createFile(path: string): Config =
-  Config.default
+proc createFile*(path: string): Conf =
+  default Conf
 
-proc loadFile(path: string): Config = 
-  Config.default
+proc loadConfig*(path: string): Conf = 
+  let confStr = readAll open configPath()
+  echo confstr
+  default Conf

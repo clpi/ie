@@ -45,3 +45,4 @@ proc eRe*(inp: string) =
 
 proc ed*(inp: string) =
   writeStyled inp, {styleDim}
+
