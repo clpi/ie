@@ -1,7 +1,6 @@
 import os, strformat, strutils, options, streams, parsecfg, tables
 import util
 
-
 type
   IdleConfig* = object
     config*: Config
@@ -10,7 +9,6 @@ type
     opts*: Table[string, string]
     cmds*: Table[string, string]
     auto*: Table[string, string]
-
 
   CompilerConfig =  object
     config*: Config
@@ -21,7 +19,6 @@ type
     prompt: string
     history: string
     indent: bool
-
 
 proc newConfig* = 
   echo ""
