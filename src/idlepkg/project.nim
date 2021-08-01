@@ -1,5 +1,10 @@
 import os, strutils
 
+type Project* = object
+  name: string
+  absoluteDir: string
+  bin: bool
+
 proc newWorkspace*(name: string) =
   let pdir = joinPath(getCurrentDir(), name)
   try:

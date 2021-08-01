@@ -15,15 +15,15 @@ const DEBUG = true
 proc `<->`*(a, b:string): bool =
   a == b
 
-proc main(config: Conf) = 
+proc main(config: IdleConfig) = 
   if DEBUG:
     echo &"[DEBUG] Config directory: {configDir()}, exists: {dirExists configDir()}"
-    echo &"[DEBUG] Config file: {configFile()}, exists: {fileExists configFile()} "
+    echo &"[DEBUG] Config file: {configDefaultPath()}, exists: {fileExists configDefaultPath()} "
   matchArgs config
   # print_help()
 
 when isMainModule:
-  main Conf.default
+  main configLoadDefaultFile()
 
 
 

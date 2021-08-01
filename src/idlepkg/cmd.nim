@@ -1,6 +1,6 @@
 import parseopt, strformat, strutils, options, terminal
        # sugar, sequtils, times, parsecfg,tables,
-import util, repl, edit, server,  project,  ui, compile, config, cmd/[help, handle]
+import util, project,  config, cmd/[help, handle]
 
 type 
   Cmd* = tuple[short: string, long: string, desc: string]
@@ -43,7 +43,7 @@ proc help*(col: ForegroundColor, cmd: Cmd): void =
 proc matchCmd*() = 
   echo ""
 
-proc echoHelp*(config: Conf, cmd: Cmd) = 
+proc echoHelp*(config: IdleConfig, cmd: Cmd) = 
   welcomeMsg()
 
   ebYe "\nIDLE "; eb "USAGE\n"; eb "\nCOMMANDS:\n"
@@ -54,10 +54,10 @@ proc echoHelp*(config: Conf, cmd: Cmd) =
 
   tipsMsg()
 
-proc matchRunArgs*( config: Conf, cmd: Cmd) =
+proc matchRunArgs*( config: IdleConfig, cmd: Cmd) =
   ebGr &"Matching run : val"
 
-proc matchBuildArgs*( config: Conf, cmd: Cmd) =
+proc matchBuildArgs*( config: IdleConfig, cmd: Cmd) =
     ebYe &"{cmd.long} Got build command, file?\n"
     const bfile:string = ""
     if bfile == "": # assume build workspace, check for modfile
@@ -66,7 +66,7 @@ proc matchBuildArgs*( config: Conf, cmd: Cmd) =
     else:
       runBuild bfile
 
-proc matchNewArgs*( config: Conf, cmd: Cmd) =
+proc matchNewArgs*( config: IdleConfig, cmd: Cmd) =
   const pname: string = ""
   if pname != "":
     ebRe "Need project name for new command"
@@ -75,29 +75,30 @@ proc matchNewArgs*( config: Conf, cmd: Cmd) =
   newWorkspace pname
   
 
-proc matchEditArgs*( config: Conf, cmd: Cmd) =
+proc matchEditArgs*( config: IdleConfig, cmd: Cmd) =
   eGr &"{cmd.long} Matching edit cmd, edit val?: \n"
-  runEdit()
+  echo "runEdit()"
 
-proc matchReplArgs*( config: Conf, cmd: Cmd) =
-  runRepl()
+proc matchReplArgs*( config: IdleConfig, cmd: Cmd) =
+  echo "runRepl()"
 
-proc matchDisplayArgs*( config: Conf, cmd: Cmd) =
+proc matchDisplayArgs*( config: IdleConfig, cmd: Cmd) =
   ebRe &"{cmd.long} Got display command, value: \n"
-  runUi()
+  echo "run ie-tui"
 
-proc matchServerArgs*( config: Conf, cmd: Cmd) =
+proc matchServerArgs*( config: IdleConfig, cmd: Cmd) =
   eGr &"{cmd.long} Matching server cmd, edit val?: \n"
-  runServer()
+  echo "runServer()"
 
 
-proc matchConfigArgs*( config: Conf, cmd: Cmd) =
+proc matchConfigArgs*( config: IdleConfig, cmd: Cmd) =
   ebBl &"{cmd.long} Got config\n"
   var kw = ""
   if kw == "": eRe "[No kw]\t"
   else: eGr &"[KW {kw}]\t"
-  eb &"Matching config {kw},pening\n"
+  eb &"Matching config {kw},opening\n"
   # var config = configFromFile();
+  let config = configLoadFromFile()
   if kw != "":
     case kw
     of "set", "s":
@@ -110,12 +111,12 @@ proc matchConfigArgs*( config: Conf, cmd: Cmd) =
       er &"unrecognized config cmd"
   else:
     er &"no kw: showing all config:"
-    let cs = readAll configFile().open fmRead
-    eb "FILE: {configFile()}\n"
+    let cs = readAll configDefaultPath().open fmRead
+    eb &"FILE: {configDefaultPath()}\n"
     er &"{cs}"
 
 # eventually return subcmd here
-proc matchSubcmd( key: string, val:string, config: Conf) = 
+proc matchSubcmd( key: string, val:string, config: IdleConfig) = 
   case key
     of "c", "config": matchConfigArgs config, CMDS[1]
     of "b" , "build": matchBuildArgs config, CMDS[1]
@@ -130,7 +131,7 @@ proc matchSubcmd( key: string, val:string, config: Conf) =
 
 
 # eventualy mutate config here (?)
-proc matchOpts( key:string, val:string, config: Conf) =
+proc matchOpts( key:string, val:string, config: IdleConfig) =
   case key
   of "c" , "config":
     ebGr &"config {key} and {val}\n"
@@ -153,7 +154,7 @@ template `-?`(a: string, b: Cmd): Option[Cmd] =
   if a is br startsWith b.long a: some(b)
   else: none(Cmd)
 
-proc matchArgs*(config: Conf) =
+proc matchArgs*(config: IdleConfig) =
   var argCtr: int = 0;
 
   for kind,key,val in getOpt():
@@ -169,6 +170,6 @@ proc matchArgs*(config: Conf) =
       echo "Else??"; 
       break
   if argCtr == 0:
-    echoHelp Conf.default, CMDS[0]
+    echoHelp IdleConfig.default, CMDS[0]
     return
 
