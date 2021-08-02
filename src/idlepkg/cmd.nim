@@ -15,14 +15,16 @@ const CMDS* = [
   ("R", "repl", "Start the REPL"),
   ("d", "display", "Show the idle dashboard in terminal"),
   ("s", "server", "Start the idle server"),
+  ("l", "list", "List all automations"),
   ("h", "help", "Show the help/docs in terminal"),
 ]
 
 const OPTS* = [
-  ("d", "debug", "Add verbose debug logutputf varying levels."),
-  ("C", "nocolor", "Turnf coloredutput"),
-  ("h", "help", "Print this help message,r by command"),
-  ("c", "config", "Configure variables for idle settings"),
+  ("-d", "--debug", "Add verbose debug logutputf varying levels."),
+  ("-v", "--version", "Output the version"),
+  ("-C", "--nocolor", "Turnf coloredutput"),
+  ("-h", "--help", "Print this help message,r by command"),
+  ("-c", "--config", "Configure variables for idle settings"),
 ]
 
 proc short*(cmd: Cmd): string =
