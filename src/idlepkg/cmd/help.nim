@@ -1,13 +1,14 @@
 import std/[terminal, strformat, options]
 import ../util
 
-
 proc welcomeMsg* =
   ebGr "\nWELCOME to the "
   ebYe "idle";eGr " automation environment.\n"
   ebYe "  -";er " The ultimate personal automation hub and workspace. \n"
   ebYe "  -";er " Version: ";ebGr "[v0.1.0-alpha.0]\n"
-  ebYe "  -";er " Last updated: "; ebBl "July 30, 2021\n" 
+  ebYe "  -";er " Last updated: ";ebBl "July 30, 2021\n" 
+  ebYe "  -";er " Author ";eYe "Chris Pecunies "
+  er "<clp@clp.is>\n"
 
 proc tipsMsg* = 
   er "\n- Run ";ebYe "idle ";eGr "help ";eGr "<command>";er " for "

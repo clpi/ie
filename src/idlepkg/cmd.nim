@@ -105,6 +105,9 @@ proc matchConfigArgs*( config: IdleConfig, cmd: Cmd) =
       er &"Got config SET "
     of "get", "g":
       er &"got config GET"
+    of "list", "ls":
+      er "Got config List"
+      discard configToStr()
     of "reset", "r":
       er &"got config RESET"
     else:
@@ -156,7 +159,6 @@ template `-?`(a: string, b: Cmd): Option[Cmd] =
 
 proc matchArgs*(config: IdleConfig) =
   var argCtr: int = 0;
-
   for kind,key,val in getOpt():
     case kind
     of cmdArgument:
